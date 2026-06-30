@@ -12,6 +12,8 @@ SYSTEM_PROCESSES = {
     'corebrightnessd', 'distnoted', 'notifyd', 'configd', 'diskarbitrationd',
     'opendirectoryd', 'trustd', 'securityd', 'syspolicyd', 'mdworker',
     'mds', 'mds_stores', 'hidd', 'sharingd', 'usbd', 'kernelmanagerd',
+    'perfpowerservices', 'perfpowerserviced', 'thermalmonitord',
+    'mediaanalysisd', 'photolibraryd', 'cloudd', 'bird', 'nsurlsessiond',
     # Transient sampling tools — they exit on their own
     'top',
 }
@@ -219,9 +221,14 @@ def main():
                 print(f"⏱️  Time remaining: {hh}h {mm:02d}m")
         
         print("\n--- Interpretation 💡 ---")
-        print("Battery Health indicates the long-term condition of your battery, representing its maximum charge capacity relative to its original design capacity. 🔬")
-        print("A lower health percentage means your battery can't hold as much charge as it could when it was new.")
-        print("\nBattery Life indicates the current charge level of your battery. It's the percentage you see in the menu bar and shows how much power you have available right now. ⚡")
+        print("Battery Health indicates the long-term condition of your battery,")
+        print("representing its maximum charge capacity relative to its original")
+        print("design capacity. 🔬")
+        print("A lower health percentage means your battery can't hold as much")
+        print("charge as it could when it was new.")
+        print("\nBattery Life indicates the current charge level of your battery.")
+        print("It's the percentage you see in the menu bar and shows how much")
+        print("power you have available right now. ⚡")
         print("Think of it like a fuel gauge.")
         
     else:
