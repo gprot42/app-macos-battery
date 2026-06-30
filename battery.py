@@ -27,7 +27,7 @@ def get_battery_info():
         output = subprocess.check_output(command, shell=True, text=True)
 
         # Updated regex to capture multiple statistics.
-        pattern = re.compile(r'"(AppleRawMaxCapacity|DesignCapacity|AppleRawCurrentCapacity|NominalChargeCapacity|CurrentCapacity|MaxCapacity|CycleCount|TotalCycleCount)"\s*=\s*(\d+)')
+        pattern = re.compile(r'"(AppleRawMaxCapacity|DesignCapacity|AppleRawCurrentCapacity|NominalChargeCapacity|CurrentCapacity|MaxCapacity|CycleCount|TotalCycleCount|TimeRemaining|AvgTimeToEmpty|AvgTimeToFull|IsCharging|ExternalConnected)"\s*=\s*(\w+)')
         
         matches = dict(pattern.findall(output))
         
@@ -40,6 +40,10 @@ def get_battery_info():
             'DesignCapacity': int(matches.get('DesignCapacity', 0)),
             'CycleCount': int(matches.get('CycleCount', 0)),
             'TotalCycleCount': int(matches.get('TotalCycleCount', 0)),
+            'IsCharging': matches.get('IsCharging', 'No') == 'Yes',
+            'ExternalConnected': matches.get('ExternalConnected', 'No') == 'Yes',
+            'TimeRemaining': int(matches.get('TimeRemaining', 0)),
+            'AvgTimeToFull': int(matches.get('AvgTimeToFull', 65535)),
         }
         
         # Add additional calculated values
@@ -200,6 +204,19 @@ def main():
         
         print("\n🔋 Battery Health: {:.2f}%".format(battery_info['BatteryHealthPercent']))
         print(f"🔋 Battery Life: {battery_info['BatteryLifePercent']:.2f}%")
+
+        if battery_info['IsCharging'] or battery_info['ExternalConnected']:
+            time_to_full = battery_info['AvgTimeToFull']
+            if time_to_full > 0 and time_to_full < 65535:
+                hh, mm = divmod(time_to_full, 60)
+                print(f"⚡ Charging — full in {hh}h {mm:02d}m")
+            else:
+                print("⚡ Charging")
+        else:
+            mins = battery_info['TimeRemaining']
+            if mins > 0 and mins < 65535:
+                hh, mm = divmod(mins, 60)
+                print(f"⏱️  Time remaining: {hh}h {mm:02d}m")
         
         print("\n--- Interpretation 💡 ---")
         print("Battery Health indicates the long-term condition of your battery, representing its maximum charge capacity relative to its original design capacity. 🔬")
